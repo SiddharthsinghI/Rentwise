@@ -52,16 +52,16 @@ In **Phase 3**, the platform achieves full-stack completion:
 
 | Layer | Technology | Version | Purpose |
 |---|---|---|---|
-| **Frontend Framework** | React + Vite | React 19.3 / Vite 8.3 | Ultra-fast client application with optimized build |
-| **Styling & UI** | Tailwind CSS | v3.4 | Curated color tokens, responsive layouts, glassmorphism |
-| **Icons** | Lucide React | v1.60 | Modern SVG iconography |
-| **Data Visualization** | Recharts | v3.10 | Interactive monthly revenue and category charts |
-| **Backend Runtime** | Node.js + Express | Node v24 / Express 4.21 | RESTful API server with modular routing and controllers |
+| **Frontend Framework** | React + Vite | React 19.3.1 / Vite 8.3.4 | Ultra-fast client application with optimized build |
+| **Styling & UI** | Tailwind CSS | v3.4.19 | Curated color tokens, responsive layouts, glassmorphism |
+| **Icons** | Lucide React | v1.60.0 | Modern SVG iconography |
+| **Data Visualization** | Recharts | v3.10.1 | Interactive monthly revenue and category charts |
+| **Backend Runtime** | Node.js + Express | Node v18+ (tested v24.12) / Express 4.22 (resolved from ^4.21.2) | RESTful API server with modular routing and controllers |
 | **Database ORM** | Prisma ORM | v6.19.3 | Type-safe query engine, migrations, and schema validation |
-| **Database** | MySQL | 8.0.44 | Relational storage, ACID transactions, and InnoDB row locking |
-| **Authentication** | JWT + bcryptjs | jsonwebtoken 9.0 / bcryptjs 2.4 | Token-based auth and cryptographic password hashing |
-| **Validation** | Zod | v3.24 | Schema validation for auth, products, and bookings |
-| **Testing** | Vitest + Supertest | Vitest 3.2 / Supertest 7.0 | Automated integration and concurrency testing (49 passing tests) |
+| **Database** | MySQL | 8.0.44 (InnoDB) | Relational storage, ACID transactions, and InnoDB row locking |
+| **Authentication** | JWT + bcryptjs | jsonwebtoken 9.0.3 / bcryptjs 2.4.3 | Token-based auth and cryptographic password hashing |
+| **Validation** | Zod | v3.25 (resolved from ^3.24.2) | Schema validation for auth, products, and bookings |
+| **Testing** | Vitest + Supertest | Vitest 3.2.7 / Supertest 7.3.1 | Automated integration and concurrency testing (49 passing tests) |
 
 ---
 
@@ -332,9 +332,15 @@ To test different roles:
 
 ---
 
-## 🧪 Testing Instructions
+## 🧪 Testing & Build Instructions
 
 The backend test suite contains **49 automated tests** across 6 test files covering all functional, authorization, database, and concurrency scenarios.
+
+### Database Test Execution & Fixture Resetting
+> **Test Database Behavior**: The test runner (`vitest`) connects directly to the MySQL database specified by `DATABASE_URL` in `server/.env`.
+> Before each test file runs, `tests/dbHelper.js` executes `resetTestDb()`, wiping and restoring the standard demo seed fixtures (4 users, 5 products, 5 bookings).
+> Concurrency tests genuinely execute interactive MySQL transactions and InnoDB row-level pessimistic locks (`SELECT ... FOR UPDATE`).
+> If you have custom records you wish to preserve during development, configure `DATABASE_URL` in `server/.env` to point to a dedicated test database (e.g. `rentwise_test_db`).
 
 ### Running Backend Automated Tests
 From the `server/` directory:
@@ -407,6 +413,22 @@ Tests:       49 passed (49)
 Duration:    ~17s
 ```
 
+### Frontend Production Build & Preview
+To compile the client into an optimized production bundle and preview it locally:
+
+**From the `client/` directory:**
+```bash
+cd client
+
+# Build the optimized production bundle
+npm run build
+
+# Preview the production build locally (runs on http://localhost:4173)
+npm run preview
+```
+
+*(Or from the workspace root: `npm run build` and `npm run preview`)*
+
 ### Optional: Running the Live Full-Stack HTTP Verification Script
 With the backend server running locally on port 5000, you can run the integration check from the `server/` directory:
 ```bash
@@ -431,7 +453,7 @@ Executes live HTTP requests testing health, auth, catalog, booking creation, ven
 | **8** | **Backend API** | Complete Express REST API (`/api/auth`, `/api/products`, `/api/bookings`, `/api/users`, `/api/dashboard`, `/api/wishlist`) with security headers (Helmet), CORS, and standardized JSON payloads. | 49 passing automated tests in Vitest across 6 test suites. |
 | **9** | **Database Persistence** | Real MySQL 8 database integration using Prisma ORM with versioned migrations, relational foreign keys, indexes, and seeded records. | `tests/concurrency.test.js` & `tests/bookings.test.js` verifying direct MySQL persistence with InnoDB row locking. |
 | **10** | **Validation & Error Handling** | Client and server-side Zod validators, HTTP 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, and 409 Conflict with informative user-friendly messages. | Vitest test suite explicitly validating all error status codes and constraint violations. |
-| **11** | **Responsive UI** | Mobile slide-over navigation drawer, responsive data tables, responsive Recharts cards, mobile filter sheets, and modern emerald/slate color scheme. | Verified via Tailwind CSS responsive design tokens and error-free Vite production build. |
+| **11** | **Responsive UI** | Mobile slide-over navigation drawer, responsive data tables with horizontal scroll wrappers, responsive Recharts cards with `<ResponsiveContainer>`, responsive mobile filter modal sheet, and modern emerald/slate color scheme. | Implemented via Tailwind CSS responsive breakpoints (`sm`, `md`, `lg`, `xl`) and verified through error-free Vite production build. |
 
 ---
 
