@@ -2,6 +2,21 @@ import { prisma } from '../src/config/prisma.js';
 import { SEED_USERS, SEED_PRODUCTS, SEED_BOOKINGS } from '../src/repositories/seedData.js';
 
 export const resetTestDb = async () => {
+  // Safety Guard: Ensure destructive test reset is restricted to a dedicated test database
+  const activeUrl = process.env.TEST_DATABASE_URL || process.env.DATABASE_URL || '';
+  const isDedicatedTestDb = activeUrl.toLowerCase().includes('_test') || 
+                           activeUrl.toLowerCase().includes('test_') ||
+                           activeUrl.toLowerCase().includes('rentwise_test');
+  const allowDevReset = process.env.ALLOW_DEV_DB_RESET === 'true';
+
+  if (!isDedicatedTestDb && !allowDevReset) {
+    throw new Error(
+      `[Safety Guard] Destructive test reset blocked! Tests are currently targeted at a non-test database: "${activeUrl.split('@')[1] || 'rentwise_db'}". ` +
+      `To protect your development data, configure a dedicated test database (e.g. TEST_DATABASE_URL="mysql://username:password@localhost:3306/rentwise_test_db") ` +
+      `or explicitly set ALLOW_DEV_DB_RESET=true.`
+    );
+  }
+
   // Clean tables in reverse dependency order
   await prisma.wishlistItem.deleteMany({});
   await prisma.booking.deleteMany({});

@@ -56,7 +56,7 @@ In **Phase 3**, the platform achieves full-stack completion:
 | **Styling & UI** | Tailwind CSS | v3.4.19 | Curated color tokens, responsive layouts, glassmorphism |
 | **Icons** | Lucide React | v1.60.0 | Modern SVG iconography |
 | **Data Visualization** | Recharts | v3.10.1 | Interactive monthly revenue and category charts |
-| **Backend Runtime** | Node.js + Express | Node v18+ (tested v24.12) / Express 4.22 (resolved from ^4.21.2) | RESTful API server with modular routing and controllers |
+| **Backend Runtime** | Node.js + Express | Node.js ^20.19.0 \|\| >=22.12.0 (tested on v24.12) / Express 4.22 (resolved from ^4.21.2) | RESTful API server with modular routing and controllers |
 | **Database ORM** | Prisma ORM | v6.19.3 | Type-safe query engine, migrations, and schema validation |
 | **Database** | MySQL | 8.0.44 (InnoDB) | Relational storage, ACID transactions, and InnoDB row locking |
 | **Authentication** | JWT + bcryptjs | jsonwebtoken 9.0.3 / bcryptjs 2.4.3 | Token-based auth and cryptographic password hashing |
@@ -240,7 +240,7 @@ VITE_API_URL=http://localhost:5000/api
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
-- **Node.js**: v18.0.0 or higher (v20+ LTS recommended)
+- **Node.js**: `^20.19.0` or `>=22.12.0` (Node 20.19+, 22.12+, or 24+ LTS; required by Vite 8.3.4 engine constraint; verified on `v24.12.0`)
 - **MySQL**: 8.0 or higher running on `localhost:3306`
 
 ### 2. MySQL Database Setup
@@ -336,11 +336,26 @@ To test different roles:
 
 The backend test suite contains **49 automated tests** across 6 test files covering all functional, authorization, database, and concurrency scenarios.
 
-### Database Test Execution & Fixture Resetting
-> **Test Database Behavior**: The test runner (`vitest`) connects directly to the MySQL database specified by `DATABASE_URL` in `server/.env`.
-> Before each test file runs, `tests/dbHelper.js` executes `resetTestDb()`, wiping and restoring the standard demo seed fixtures (4 users, 5 products, 5 bookings).
-> Concurrency tests genuinely execute interactive MySQL transactions and InnoDB row-level pessimistic locks (`SELECT ... FOR UPDATE`).
-> If you have custom records you wish to preserve during development, configure `DATABASE_URL` in `server/.env` to point to a dedicated test database (e.g. `rentwise_test_db`).
+### Database Test Execution, Isolation & Safety Guard
+> **Test Database Isolation**: The automated test suite (`vitest`) performs destructive resets (`deleteMany`) and fixture reseeding (`resetTestDb()`) before tests run.
+> 
+> **Safety Guard**: To prevent accidental deletion of your development data, `server/tests/dbHelper.js` includes a strict guard that blocks test resets unless:
+> 1. A dedicated test database URL is configured via `TEST_DATABASE_URL` (or the database name contains `_test`, e.g. `rentwise_test_db`), OR
+> 2. `ALLOW_DEV_DB_RESET=true` is explicitly passed in your environment.
+> 
+> **Setting Up the Dedicated Test Database (Recommended)**:
+> ```bash
+> # 1. Create the dedicated test database in MySQL (runs setupTestDb.js):
+> npm run prisma:test:setup
+> 
+> # 2. Add TEST_DATABASE_URL to your server/.env:
+> # TEST_DATABASE_URL="mysql://username:your_password@localhost:3306/rentwise_test_db"
+> 
+> # 3. Deploy schema migrations to the test database:
+> DATABASE_URL="mysql://username:your_password@localhost:3306/rentwise_test_db" npx prisma migrate deploy
+> ```
+> 
+> Concurrency tests genuinely exercise interactive MySQL transactions and InnoDB row-level pessimistic locks (`SELECT ... FOR UPDATE`).
 
 ### Running Backend Automated Tests
 From the `server/` directory:
@@ -453,7 +468,7 @@ Executes live HTTP requests testing health, auth, catalog, booking creation, ven
 | **8** | **Backend API** | Complete Express REST API (`/api/auth`, `/api/products`, `/api/bookings`, `/api/users`, `/api/dashboard`, `/api/wishlist`) with security headers (Helmet), CORS, and standardized JSON payloads. | 49 passing automated tests in Vitest across 6 test suites. |
 | **9** | **Database Persistence** | Real MySQL 8 database integration using Prisma ORM with versioned migrations, relational foreign keys, indexes, and seeded records. | `tests/concurrency.test.js` & `tests/bookings.test.js` verifying direct MySQL persistence with InnoDB row locking. |
 | **10** | **Validation & Error Handling** | Client and server-side Zod validators, HTTP 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, and 409 Conflict with informative user-friendly messages. | Vitest test suite explicitly validating all error status codes and constraint violations. |
-| **11** | **Responsive UI** | Mobile slide-over navigation drawer, responsive data tables with horizontal scroll wrappers, responsive Recharts cards with `<ResponsiveContainer>`, responsive mobile filter modal sheet, and modern emerald/slate color scheme. | Implemented via Tailwind CSS responsive breakpoints (`sm`, `md`, `lg`, `xl`) and verified through error-free Vite production build. |
+| **11** | **Responsive UI** | Mobile slide-over navigation drawer, responsive data tables with horizontal scroll wrappers, responsive Recharts cards with `<ResponsiveContainer>`, responsive mobile filter modal sheet, and modern emerald/slate color scheme. | Implemented via Tailwind CSS responsive breakpoint utilities (`sm`, `md`, `lg`, `xl`). Verified compilation and structure through Vite production build; automated mobile browser viewport testing was not performed (manual viewport testing across devices is recommended). |
 
 ---
 
