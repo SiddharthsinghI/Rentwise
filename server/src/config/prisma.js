@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { env } from './env.js';
 
 export const prisma = new PrismaClient({
+  datasources: env.DATABASE_URL ? { db: { url: env.DATABASE_URL } } : undefined,
   log: env.isProd ? ['error'] : ['error', 'warn']
 });
 
