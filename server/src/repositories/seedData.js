@@ -1,0 +1,268 @@
+/**
+ * Initial seed data for RentWise in-memory repository
+ * Pre-seeded users share default password: "Password123!"
+ */
+
+export const SEED_PASSWORD_HASH = '$2a$10$jR4MAt8alVbmZ.vZiTeBDO9lFmy6BRds1EaD9mDOzBRlTNEj22Tq6';
+
+export const SEED_USERS = [
+  {
+    id: 'cust-1',
+    name: 'Alex Rivera',
+    email: 'alex.customer@example.com',
+    passwordHash: SEED_PASSWORD_HASH,
+    role: 'customer',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    phone: '+1 (555) 234-5678',
+    location: 'San Francisco, CA',
+    bio: 'Independent content creator, drone enthusiast, and tech reviewer. Passionate about trying new camera rigs.',
+    memberSince: 'March 2023',
+    rating: 4.9,
+    reviewsCount: 14,
+    verified: true,
+    createdAt: '2023-03-15T10:00:00Z'
+  },
+  {
+    id: 'cust-2',
+    name: 'Priya Sharma',
+    email: 'priya.customer@example.com',
+    passwordHash: SEED_PASSWORD_HASH,
+    role: 'customer',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80',
+    phone: '+1 (555) 876-5432',
+    location: 'Austin, TX',
+    bio: 'Indie game developer & visual designer. Frequently rents high-end gaming rigs and cinema projectors.',
+    memberSince: 'July 2023',
+    rating: 5.0,
+    reviewsCount: 9,
+    verified: true,
+    createdAt: '2023-07-20T11:00:00Z'
+  },
+  {
+    id: 'vend-1',
+    name: 'Marcus Vance',
+    businessName: 'Apex Cine & Pro AV',
+    email: 'marcus.vendor@example.com',
+    passwordHash: SEED_PASSWORD_HASH,
+    role: 'vendor',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    phone: '+1 (555) 912-3456',
+    location: 'Los Angeles, CA',
+    bio: 'Premier cinema equipment and AV gear rental house. 100% inspected, calibrated, and sensor-cleaned equipment.',
+    memberSince: 'January 2022',
+    rating: 4.96,
+    reviewsCount: 88,
+    responseTime: '< 15 mins',
+    verified: true,
+    createdAt: '2022-01-10T09:00:00Z'
+  },
+  {
+    id: 'vend-2',
+    name: 'Elena Rostova',
+    businessName: 'Urban Tech & Tool Hub',
+    email: 'elena.vendor@example.com',
+    passwordHash: SEED_PASSWORD_HASH,
+    role: 'vendor',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
+    phone: '+1 (555) 654-3210',
+    location: 'Seattle, WA',
+    bio: 'Providing top-tier computing workstations, workshop power tools, and high-tech gear for creators and makers.',
+    memberSince: 'October 2022',
+    rating: 4.92,
+    reviewsCount: 62,
+    responseTime: '< 30 mins',
+    verified: true,
+    createdAt: '2022-10-05T14:00:00Z'
+  }
+];
+
+export const SEED_PRODUCTS = [
+  {
+    id: 'prod-1',
+    name: 'Sony Alpha A7 IV Full-Frame Camera Kit',
+    category: 'cameras',
+    vendorId: 'vend-1',
+    pricePerDay: 68,
+    securityDeposit: 350,
+    totalQuantity: 1,
+    availability: 'available',
+    condition: 'Like New',
+    rating: 4.95,
+    reviewsCount: 38,
+    featured: true,
+    popular: true,
+    images: [
+      'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80',
+      'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1000&q=80'
+    ],
+    description: 'The Sony A7 IV is the ideal hybrid camera for indie filmmakers and editorial photographers.',
+    features: ['33MP Full-Frame Exmor R CMOS Sensor', '4K 60p 10-Bit Recording', 'Real-Time Eye AF'],
+    specs: { brand: 'Sony', mount: 'Sony E-Mount', sensor: '33MP Full Frame' },
+    location: 'Los Angeles, CA',
+    inclusions: ['Camera Body', '24-70mm GM Lens', '3x Batteries', 'Dual Charger', 'Pelican Hard Case']
+  },
+  {
+    id: 'prod-2',
+    name: 'Canon EOS R5 Mirrorless Cinema Kit',
+    category: 'cameras',
+    vendorId: 'vend-1',
+    pricePerDay: 95,
+    securityDeposit: 500,
+    totalQuantity: 1,
+    availability: 'available',
+    condition: 'Mint',
+    rating: 4.98,
+    reviewsCount: 29,
+    featured: true,
+    popular: true,
+    images: [
+      'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1000&q=80'
+    ],
+    description: 'The powerhouse Canon EOS R5 offers 8K RAW video capture and 45MP high-resolution stills.',
+    features: ['45MP Full-Frame CMOS Sensor', '8K 30p RAW & 4K 120p video', 'In-Body Stabilization'],
+    specs: { brand: 'Canon', mount: 'Canon RF', sensor: '45MP Full Frame' },
+    location: 'Los Angeles, CA',
+    inclusions: ['Canon EOS R5 Body', 'RF 28-70mm f/2L USM', '4x LP-E6NH Batteries']
+  },
+  {
+    id: 'prod-5',
+    name: 'Apple MacBook Pro 16" M3 Max (64GB RAM, 2TB SSD)',
+    category: 'laptops',
+    vendorId: 'vend-2',
+    pricePerDay: 85,
+    securityDeposit: 600,
+    totalQuantity: 2,
+    availability: 'available',
+    condition: 'Like New',
+    rating: 4.99,
+    reviewsCount: 42,
+    featured: true,
+    popular: true,
+    images: [
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80'
+    ],
+    description: 'Blazing fast M3 Max workstation configured for 8K editing, 3D rendering, and compiling.',
+    features: ['16-Core CPU & 40-Core GPU', '64GB Unified Memory', '16.2" Liquid Retina XDR'],
+    specs: { brand: 'Apple', processor: 'Apple M3 Max', ram: '64GB Unified' },
+    location: 'Seattle, WA',
+    inclusions: ['MacBook Pro 16"', '140W USB-C Power Adapter', 'MagSafe Cable', 'Protective Sleeve']
+  },
+  {
+    id: 'prod-9',
+    name: 'PlayStation 5 Pro Console Bundle (DualSense Edge + 4 Games)',
+    category: 'gaming',
+    vendorId: 'vend-1',
+    pricePerDay: 39,
+    securityDeposit: 200,
+    totalQuantity: 1,
+    availability: 'available',
+    condition: 'Mint',
+    rating: 4.96,
+    reviewsCount: 52,
+    featured: true,
+    popular: true,
+    images: [
+      'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=1000&q=80'
+    ],
+    description: 'Next-gen gaming package equipped with ultra-fast 2TB SSD, DualSense Edge controller, and 4 titles.',
+    features: ['PlayStation 5 Pro Console with 2TB NVMe', 'DualSense Edge Wireless Controller'],
+    specs: { brand: 'Sony PlayStation', storage: '2TB NVMe SSD' },
+    location: 'Los Angeles, CA',
+    inclusions: ['PS5 Pro Console', '2x DualSense Controllers', 'HDMI 2.1 Cable', '4 Games Disc/Codes']
+  },
+  {
+    id: 'prod-12',
+    name: 'Sony 4K HDR Laser Home Cinema Projector',
+    category: 'projectors',
+    vendorId: 'vend-1',
+    pricePerDay: 110,
+    securityDeposit: 600,
+    totalQuantity: 1,
+    availability: 'available',
+    condition: 'Like New',
+    rating: 4.99,
+    reviewsCount: 19,
+    featured: true,
+    popular: false,
+    images: [
+      'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1000&q=80'
+    ],
+    description: 'True Native 4K SXRD Laser Projector delivering cinematic contrast and 2,000 lumens.',
+    features: ['Native 4K HDR SXRD Panels', 'Laser Phosphor Light Source 2,000 Lumens'],
+    specs: { brand: 'Sony', resolution: 'Native 4K UHD (3840 x 2160)' },
+    location: 'Los Angeles, CA',
+    inclusions: ['Projector Unit', 'Remote', '4K High-Speed Optical HDMI Cable', 'Flight Case']
+  }
+];
+
+export const SEED_BOOKINGS = [
+  {
+    id: 'book-101',
+    productId: 'prod-1',
+    productName: 'Sony Alpha A7 IV Full-Frame Camera Kit',
+    productImage: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80',
+    customerId: 'cust-1',
+    customerName: 'Alex Rivera',
+    customerEmail: 'alex.customer@example.com',
+    vendorId: 'vend-1',
+    vendorName: 'Marcus Vance',
+    startDate: '2026-10-25',
+    endDate: '2026-10-28',
+    totalDays: 3,
+    dailyRate: 68,
+    baseCost: 204,
+    serviceFee: 15.30,
+    securityDeposit: 350,
+    totalPrice: 219.30,
+    status: 'pending',
+    createdAt: '2026-10-19T14:32:00Z',
+    customerNotes: 'Need this for a 3-day commercial product shoot in downtown LA.',
+    destination: 'Los Angeles, CA'
+  },
+  {
+    id: 'book-102',
+    productId: 'prod-5',
+    productName: 'Apple MacBook Pro 16" M3 Max (64GB RAM, 2TB SSD)',
+    productImage: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&q=80',
+    customerId: 'cust-1',
+    customerName: 'Alex Rivera',
+    customerEmail: 'alex.customer@example.com',
+    vendorId: 'vend-2',
+    vendorName: 'Elena Rostova',
+    startDate: '2026-10-18',
+    endDate: '2026-10-24',
+    totalDays: 6,
+    dailyRate: 85,
+    baseCost: 510,
+    serviceFee: 38.25,
+    securityDeposit: 600,
+    totalPrice: 548.25,
+    status: 'active',
+    createdAt: '2026-10-16T09:15:00Z',
+    customerNotes: 'Heavy 8K video rendering project deadline.',
+    destination: 'Seattle / Remote'
+  },
+  {
+    id: 'book-103',
+    productId: 'prod-9',
+    productName: 'PlayStation 5 Pro Console Bundle (DualSense Edge + 4 Games)',
+    productImage: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=600&q=80',
+    customerId: 'cust-2',
+    customerName: 'Priya Sharma',
+    customerEmail: 'priya.customer@example.com',
+    vendorId: 'vend-1',
+    vendorName: 'Marcus Vance',
+    startDate: '2026-11-01',
+    endDate: '2026-11-04',
+    totalDays: 3,
+    dailyRate: 39,
+    baseCost: 117,
+    serviceFee: 8.78,
+    securityDeposit: 200,
+    totalPrice: 125.78,
+    status: 'completed',
+    createdAt: '2026-10-10T11:00:00Z',
+    customerNotes: 'Weekend gaming tournament testing.',
+    destination: 'Austin, TX'
+  }
+];

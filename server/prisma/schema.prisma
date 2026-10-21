@@ -1,0 +1,127 @@
+// RentWise Prisma Schema — Phase 3 MySQL Integration
+// Smart Rental Management Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String         @id
+  name             String         @db.VarChar(191)
+  email            String         @unique @db.VarChar(191)
+  passwordHash     String         @db.VarChar(255)
+  role             String         @default("customer") @db.VarChar(50)
+  avatar           String?        @db.Text
+  phone            String?        @db.VarChar(50)
+  location         String?        @db.VarChar(191)
+  bio              String?        @db.Text
+  businessName     String?        @db.VarChar(191)
+  memberSince      String?        @db.VarChar(50)
+  rating           Float          @default(5.0)
+  reviewsCount     Int            @default(0)
+  verified         Boolean        @default(true)
+  responseTime     String?        @db.VarChar(50)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  // Relationships
+  products         Product[]
+  customerBookings Booking[]      @relation("CustomerBookings")
+  vendorBookings   Booking[]      @relation("VendorBookings")
+  wishlist         WishlistItem[]
+
+  @@map("users")
+}
+
+model Product {
+  id              String         @id
+  name            String         @db.VarChar(255)
+  category        String         @db.VarChar(100)
+  vendorId        String         @db.VarChar(191)
+  pricePerDay     Decimal        @db.Decimal(10, 2)
+  securityDeposit Decimal        @default(0.00) @db.Decimal(10, 2)
+  totalQuantity   Int            @default(1)
+  availability    String         @default("available") @db.VarChar(50)
+  condition       String         @default("Like New") @db.VarChar(50)
+  rating          Float          @default(5.0)
+  reviewsCount    Int            @default(0)
+  featured        Boolean        @default(false)
+  popular         Boolean        @default(false)
+  images          Json
+  description     String         @db.Text
+  features        Json
+  specs           Json
+  location        String         @default("United States") @db.VarChar(191)
+  inclusions      Json
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relationships
+  vendor          User           @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  bookings        Booking[]
+  wishlistedBy    WishlistItem[]
+
+  @@index([vendorId])
+  @@index([category])
+  @@index([availability])
+  @@map("products")
+}
+
+model Booking {
+  id              String         @id
+  productId       String         @db.VarChar(191)
+  productName     String         @db.VarChar(255)
+  productImage    String?        @db.Text
+  customerId      String         @db.VarChar(191)
+  customerName    String         @db.VarChar(191)
+  customerEmail   String         @db.VarChar(191)
+  vendorId        String         @db.VarChar(191)
+  vendorName      String         @db.VarChar(191)
+  startDate       String         @db.VarChar(20) // ISO Date string 'YYYY-MM-DD'
+  endDate         String         @db.VarChar(20) // ISO Date string 'YYYY-MM-DD'
+  totalDays       Int
+  dailyRate       Decimal        @db.Decimal(10, 2)
+  baseCost        Decimal        @db.Decimal(10, 2)
+  serviceFee      Decimal        @db.Decimal(10, 2)
+  securityDeposit Decimal        @db.Decimal(10, 2)
+  totalPrice      Decimal        @db.Decimal(10, 2)
+  status          String         @default("pending") @db.VarChar(50) // pending, approved, active, completed, rejected, cancelled
+  customerNotes   String?        @db.Text
+  destination     String?        @db.VarChar(255)
+  rejectionReason String?        @db.Text
+  vendorFeedback  String?        @db.Text
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relationships
+  product         Product        @relation(fields: [productId], references: [id], onDelete: Restrict)
+  customer        User           @relation("CustomerBookings", fields: [customerId], references: [id], onDelete: Restrict)
+  vendor          User           @relation("VendorBookings", fields: [vendorId], references: [id], onDelete: Restrict)
+
+  @@index([productId])
+  @@index([customerId])
+  @@index([vendorId])
+  @@index([status])
+  @@map("bookings")
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String   @db.VarChar(191)
+  productId String   @db.VarChar(191)
+  createdAt DateTime @default(now())
+
+  // Relationships
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+  @@map("wishlist_items")
+}
