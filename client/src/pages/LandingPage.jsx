@@ -52,7 +52,8 @@ export const LandingPage = () => {
     }
   }, []);
 
-  const featuredProducts = products.filter((p) => p.featured || p.popular).slice(0, 6);
+  const featured = products.filter((p) => p.featured || p.popular);
+  const featuredProducts = (featured.length > 0 ? featured : products).slice(0, 6);
 
   const handleHeroSearch = (e) => {
     e.preventDefault();
