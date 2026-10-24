@@ -82,7 +82,20 @@ export const productRepository = {
 
     const products = await prisma.product.findMany({
       where,
-      orderBy: Array.isArray(orderBy) ? orderBy : [orderBy]
+      orderBy: Array.isArray(orderBy) ? orderBy : [orderBy],
+      include: {
+        vendor: {
+          select: {
+            id: true,
+            name: true,
+            businessName: true,
+            avatar: true,
+            rating: true,
+            reviewsCount: true,
+            location: true
+          }
+        }
+      }
     });
 
     let list = products.map(mapProduct);
@@ -117,7 +130,23 @@ export const productRepository = {
   async findById(id) {
     if (!id) return null;
     const product = await prisma.product.findUnique({
-      where: { id: String(id) }
+      where: { id: String(id) },
+      include: {
+        vendor: {
+          select: {
+            id: true,
+            name: true,
+            businessName: true,
+            avatar: true,
+            rating: true,
+            reviewsCount: true,
+            location: true,
+            bio: true,
+            memberSince: true,
+            responseTime: true
+          }
+        }
+      }
     });
     return mapProduct(product);
   },

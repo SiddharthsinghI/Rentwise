@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../data/mockCategories';
 import { useProducts } from '../hooks/useProducts';
@@ -7,12 +7,10 @@ import { Button } from '../components/common/Button';
 import { useAuth } from '../hooks/useAuth';
 import {
   Search,
-  Calendar,
   Sparkles,
   ShieldCheck,
   CheckCircle2,
   TrendingUp,
-  Zap,
   ArrowRight,
   Camera,
   Laptop,
@@ -21,10 +19,9 @@ import {
   Wrench,
   Plane,
   Star,
-  Users,
-  Award,
-  Layers,
-  Clock
+  Clock,
+  User,
+  Store
 } from 'lucide-react';
 
 const iconMap = {
@@ -38,11 +35,22 @@ const iconMap = {
 
 export const LandingPage = () => {
   const { products } = useProducts();
-  const { isVendor } = useAuth();
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [howItWorksTab, setHowItWorksTab] = useState('renters');
+
+  useEffect(() => {
+    if (window.location.hash === '#how-it-works') {
+      const el = document.getElementById('how-it-works');
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
+    }
+  }, []);
 
   const featuredProducts = products.filter((p) => p.featured || p.popular).slice(0, 6);
 
@@ -216,74 +224,202 @@ export const LandingPage = () => {
       {/* How RentWise Works */}
       <section id="how-it-works" className="bg-white border-y border-slate-200/80 py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-xs font-bold text-brand-600 uppercase tracking-wider block mb-2">
-              Simple 3-Step Process
+              Authentic Community Marketplace
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 tracking-tight">
               How RentWise Works
             </h2>
-            <p className="mt-3 text-sm text-slate-500 leading-relaxed">
-              Whether you are shooting a weekend commercial or hosting a rooftop movie night, renting gear is simple and risk-free.
+            <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+              RentWise is an authentic, peer-to-peer and vendor rental platform. Only registered users set and list their own products, and real customers book on-demand—no demo accounts, no simulated placeholders.
             </p>
+
+            {/* Interactive Toggle: For Renters vs For Equipment Owners */}
+            <div className="inline-flex items-center p-1.5 rounded-2xl bg-slate-100 border border-slate-200/80 mt-8 shadow-xs">
+              <button
+                type="button"
+                onClick={() => setHowItWorksTab('renters')}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                  howItWorksTab === 'renters'
+                    ? 'bg-white text-brand-700 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <User className="w-4 h-4" />
+                <span>For Customers & Renters</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setHowItWorksTab('vendors')}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                  howItWorksTab === 'vendors'
+                    ? 'bg-white text-brand-700 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Store className="w-4 h-4" />
+                <span>For Equipment Owners & Vendors</span>
+              </button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {/* Step 1 */}
-            <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/70 relative flex flex-col justify-between">
-              <div>
-                <span className="text-4xl font-extrabold text-brand-600/30 block mb-4">
-                  01
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">
-                  Select Dates & Gear
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Browse verified cinema cameras, workstations, VR headsets, or workshop tools. Pick your rental start and return dates with automatic transparent pricing.
-                </p>
+          {/* Tab 1: For Renters */}
+          {howItWorksTab === 'renters' ? (
+            <div className="space-y-8 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Step 1 */}
+                <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/70 relative flex flex-col justify-between hover:shadow-card transition-shadow">
+                  <div>
+                    <span className="text-4xl font-extrabold text-brand-600/30 block mb-4">01</span>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">Create Customer Account</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Register your real profile in seconds. Your verified account gives you access to authentic equipment listings set and owned by real registered community vendors.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-bold text-brand-700">
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                    <span>Instant, secure registration</span>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/70 relative flex flex-col justify-between hover:shadow-card transition-shadow">
+                  <div>
+                    <span className="text-4xl font-extrabold text-brand-600/30 block mb-4">02</span>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">Browse Real Gear & Select Dates</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Explore verified cinema cameras, drones, workstations, and pro tools published by active vendors. Pick your dates for instant transparent price calculations.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-bold text-brand-700">
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                    <span>Transparent daily rates & deposits</span>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/70 relative flex flex-col justify-between hover:shadow-card transition-shadow">
+                  <div>
+                    <span className="text-4xl font-extrabold text-brand-600/30 block mb-4">03</span>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">Book, Pick Up & Return</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Submit your request directly to the equipment owner. Once approved, coordinate pickup, create with pro gear, and return smoothly to release your security deposit.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-bold text-brand-700">
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                    <span>Safe deposit refund protection</span>
+                  </div>
+                </div>
               </div>
-              <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-bold text-brand-700">
-                <CheckCircle2 className="w-4 h-4 text-brand-600" />
-                <span>Zero hidden fees</span>
+
+              {/* Renter CTA Banner */}
+              <div className="p-6 rounded-2xl bg-teal-50 border border-teal-200/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-teal-950">Looking to rent high-end production equipment?</h4>
+                    <p className="text-xs text-teal-700">Browse live listings posted by our community of verified equipment owners.</p>
+                  </div>
+                </div>
+                <Link to="/marketplace">
+                  <Button variant="primary" size="sm" className="whitespace-nowrap">
+                    Explore Marketplace →
+                  </Button>
+                </Link>
               </div>
             </div>
+          ) : (
+            <div className="space-y-8 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Step 1 */}
+                <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/70 relative flex flex-col justify-between hover:shadow-card transition-shadow">
+                  <div>
+                    <span className="text-4xl font-extrabold text-brand-600/30 block mb-4">01</span>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">Register as a Vendor</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Create your verified vendor profile with your business or studio name. Only registered users set products, ensuring genuine listings, direct chat, and transparent terms.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-bold text-brand-700">
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                    <span>Vendor portal included</span>
+                  </div>
+                </div>
 
-            {/* Step 2 */}
-            <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/70 relative flex flex-col justify-between">
-              <div>
-                <span className="text-4xl font-extrabold text-brand-600/30 block mb-4">
-                  02
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">
-                  Vendor Confirmation
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  The verified gear owner reviews your request and approves it instantly. All equipment is inspected and prepared with fresh batteries and accessories.
-                </p>
+                {/* Step 2 */}
+                <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/70 relative flex flex-col justify-between hover:shadow-card transition-shadow">
+                  <div>
+                    <span className="text-4xl font-extrabold text-brand-600/30 block mb-4">02</span>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">Set & List Your Equipment</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Publish your gear with custom photos, category, descriptions, daily pricing, security deposits, and available inventory. Your equipment goes live instantly.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-bold text-brand-700">
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                    <span>Full pricing & inventory control</span>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/70 relative flex flex-col justify-between hover:shadow-card transition-shadow">
+                  <div>
+                    <span className="text-4xl font-extrabold text-brand-600/30 block mb-4">03</span>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">Review Requests & Earn</h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Receive rental requests from verified customers in your dashboard. Accept or decline requests, coordinate item handover, and earn monthly rental revenue.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-bold text-brand-700">
+                    <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                    <span>Real-time booking management</span>
+                  </div>
+                </div>
               </div>
-              <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-bold text-brand-700">
-                <CheckCircle2 className="w-4 h-4 text-brand-600" />
-                <span>Inspected & calibrated gear</span>
+
+              {/* Vendor CTA Banner */}
+              <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-200/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0">
+                    <Store className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-emerald-950">Have gear sitting idle in your studio?</h4>
+                    <p className="text-xs text-emerald-700">Turn your cameras, tech, or tools into monthly revenue by listing your equipment today.</p>
+                  </div>
+                </div>
+                <Link to="/register">
+                  <Button variant="primary" size="sm" className="whitespace-nowrap">
+                    List Your Equipment Now →
+                  </Button>
+                </Link>
               </div>
             </div>
+          )}
 
-            {/* Step 3 */}
-            <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/70 relative flex flex-col justify-between">
+          {/* Live Platform Guarantee Card */}
+          <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/20 text-teal-400 border border-teal-500/30 flex items-center justify-center flex-shrink-0">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
               <div>
-                <span className="text-4xl font-extrabold text-brand-600/30 block mb-4">
-                  03
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">
-                  Create & Return
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Execute your production, design sprint, or renovation project. Once finished, return the gear smoothly. Security deposits are released right after verification.
+                <h4 className="text-base font-bold text-white">100% Real Users & Active Community Gear</h4>
+                <p className="text-xs text-slate-300 mt-1 leading-relaxed max-w-2xl">
+                  RentWise operates as an authentic live marketplace. There are no demo users, simulated accounts, or automated dummy listings. Only registered users set products, and all bookings are direct transactions between verified community members.
                 </p>
               </div>
-              <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-bold text-brand-700">
-                <CheckCircle2 className="w-4 h-4 text-brand-600" />
-                <span>Automated deposit return</span>
-              </div>
+            </div>
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <Link to="/register">
+                <Button variant="primary" size="md" className="text-xs font-bold whitespace-nowrap">
+                  Create Your Account
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

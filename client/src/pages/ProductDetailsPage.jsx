@@ -159,7 +159,7 @@ export const ProductDetailsPage = () => {
             <h3 className="text-base font-bold text-slate-900 mb-4">
               About the Equipment Owner
             </h3>
-            <VendorProfileCard vendorId={product.vendorId} />
+            <VendorProfileCard vendorId={product.vendorId} vendor={product.vendor} />
           </div>
         </div>
 

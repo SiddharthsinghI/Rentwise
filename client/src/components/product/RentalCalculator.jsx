@@ -363,10 +363,10 @@ export const RentalCalculator = ({ product }) => {
           <div className="bg-teal-50 border border-teal-200 p-3.5 rounded-2xl text-xs text-teal-800 space-y-1">
             <div className="flex items-center gap-1.5 font-bold">
               <CheckCircle2 className="w-4 h-4 text-teal-600" />
-              <span>Simulated Instant Booking Request</span>
+              <span>Direct Booking Request</span>
             </div>
             <p className="text-teal-700 leading-relaxed">
-              In this Phase 1 demo, your request will be immediately added to the vendor's <strong>Booking Management</strong> screen, where you can accept or decline it.
+              Your booking request will be sent directly to the equipment vendor. The owner will review your dates, approve the request, and coordinate handover.
             </p>
           </div>
 

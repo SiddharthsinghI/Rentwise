@@ -1,10 +1,9 @@
 import { apiClient, tokenStorage } from './apiClient';
-import { DEMO_USERS } from '../data/mockUsers';
 
 export const authService = {
-  // Demo user credentials metadata for login screen hints
+  // Legacy user fetcher - returns empty in live production
   async getUsers() {
-    return DEMO_USERS;
+    return [];
   },
 
   // Restore current user session from real MySQL backend via JWT

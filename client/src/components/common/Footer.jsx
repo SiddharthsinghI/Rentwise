@@ -177,17 +177,17 @@ export const Footer = () => {
               </li>
               <li>
                 <Link to="/login" className="hover:text-teal-300 transition-colors">
-                  Switch Demo Account
+                  Sign In to Account
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom copyright and assignment info */}
+        {/* Bottom copyright and platform info */}
         <div className="pt-8 border-t border-navy-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
-            © {new Date().getFullYear()} RentWise Inc. Built for Full Stack Developer Internship Technical Assignment (Rewamp Digital).
+            © {new Date().getFullYear()} RentWise Inc. Smart Rental Management Platform. All rights reserved.
           </div>
           <div className="flex items-center gap-1 text-slate-400">
             <span>Crafted with</span>
