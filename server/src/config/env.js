@@ -21,15 +21,30 @@ export const env = {
   isProd: process.env.NODE_ENV === 'production'
 };
 
+export const PRODUCTION_FRONTEND_ORIGIN = 'https://rentwise-zqd3.vercel.app';
+
 /**
  * Returns a sanitized list of allowed client origins for CORS.
- * Supports comma-separated origins, strips trailing slashes, and retains local dev origins.
+ * Checks existing allowed-origin environment variables (CLIENT_URL, CORS_ORIGIN, ALLOWED_ORIGINS, FRONTEND_URL),
+ * explicitly includes the production frontend origin, and retains local development defaults.
  */
 export const getAllowedOrigins = () => {
-  const configured = (env.CLIENT_URL || '')
-    .split(',')
+  const envSources = [
+    process.env.CLIENT_URL,
+    process.env.CORS_ORIGIN,
+    process.env.ALLOWED_ORIGINS,
+    process.env.FRONTEND_URL,
+    env.CLIENT_URL
+  ].filter(Boolean);
+
+  const parsedConfigured = envSources
+    .flatMap((source) => source.split(','))
     .map((url) => url.trim().replace(/\/+$/, ''))
     .filter(Boolean);
+
+  const knownProductionOrigins = [
+    PRODUCTION_FRONTEND_ORIGIN
+  ];
 
   const localDefaults = [
     'http://localhost:5173',
@@ -38,7 +53,32 @@ export const getAllowedOrigins = () => {
     'http://127.0.0.1:3000'
   ];
 
-  return Array.from(new Set([...configured, ...localDefaults]));
+  return Array.from(new Set([...knownProductionOrigins, ...parsedConfigured, ...localDefaults]));
+};
+
+/**
+ * Evaluates whether an incoming HTTP Origin is authorized under the CORS policy.
+ * - Permits direct/no-origin calls (mobile apps, curl, server-to-server health checks)
+ * - Permits verified production frontend and configured environment origins
+ * - Permits project-scoped Vercel preview deployments (rentwise-*.vercel.app)
+ * - Rejects untrusted/arbitrary third-party origins
+ */
+export const isOriginAllowed = (origin) => {
+  if (!origin) return true;
+  const cleanOrigin = origin.trim().replace(/\/+$/, '');
+  const allowed = getAllowedOrigins();
+
+  if (allowed.includes(cleanOrigin)) {
+    return true;
+  }
+
+  // Allow project-scoped preview deployments (e.g. rentwise-preview-abc123.vercel.app)
+  const isRentwisePreview = /^https:\/\/rentwise(-[a-z0-9-]+)?\.vercel\.app$/i.test(cleanOrigin);
+  if (isRentwisePreview) {
+    return true;
+  }
+
+  return false;
 };
 
 export const validateEnvironment = () => {

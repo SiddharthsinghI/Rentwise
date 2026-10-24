@@ -1,38 +1,36 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import { env, getAllowedOrigins } from './config/env.js';
+import { isOriginAllowed } from './config/env.js';
 import apiRouter from './routes/index.js';
 import { notFoundHandler, errorHandler } from './middleware/error.middleware.js';
 
 const app = express();
 
-// Security headers
-app.use(helmet());
+// Security headers with crossOriginResourcePolicy permitting cross-origin API clients
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
+  })
+);
 
-// Dynamic CORS configuration supporting multiple origins and Vercel preview domains
-const allowedOrigins = getAllowedOrigins();
-
+// Dynamic CORS configuration supporting explicit production origins, env vars, and preflights
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server, health checks)
-    if (!origin) return callback(null, true);
-
-    const cleanOrigin = origin.replace(/\/+$/, '');
-    const isAllowed =
-      allowedOrigins.includes(cleanOrigin) ||
-      Boolean(process.env.VERCEL && cleanOrigin.endsWith('.vercel.app'));
-
-    if (isAllowed) {
+    if (isOriginAllowed(origin)) {
       return callback(null, true);
     }
     return callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 86400, // Cache preflight response for 24 hours
+  optionsSuccessStatus: 200 // Compatible with older browsers & mobile webviews
 };
 
+// CORS middleware MUST be registered before any routes and parsers
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
