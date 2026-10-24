@@ -10,22 +10,7 @@ export const seedDatabase = async () => {
   for (const user of SEED_USERS) {
     await prisma.user.upsert({
       where: { id: user.id },
-      update: {
-        name: user.name,
-        email: user.email,
-        passwordHash: user.passwordHash,
-        role: user.role,
-        avatar: user.avatar,
-        phone: user.phone,
-        location: user.location,
-        bio: user.bio,
-        businessName: user.businessName || null,
-        memberSince: user.memberSince,
-        rating: user.rating,
-        reviewsCount: user.reviewsCount,
-        verified: user.verified,
-        responseTime: user.responseTime || null
-      },
+      update: {}, // Non-destructive: preserves existing vendor/user credentials and profile data
       create: {
         id: user.id,
         name: user.name,
@@ -51,26 +36,7 @@ export const seedDatabase = async () => {
   for (const p of SEED_PRODUCTS) {
     await prisma.product.upsert({
       where: { id: p.id },
-      update: {
-        name: p.name,
-        category: p.category,
-        vendorId: p.vendorId,
-        pricePerDay: p.pricePerDay,
-        securityDeposit: p.securityDeposit || 0,
-        totalQuantity: p.totalQuantity || 1,
-        availability: p.availability || 'available',
-        condition: p.condition || 'Like New',
-        rating: p.rating || 5.0,
-        reviewsCount: p.reviewsCount || 0,
-        featured: Boolean(p.featured),
-        popular: Boolean(p.popular),
-        images: p.images || [],
-        description: p.description,
-        features: p.features || [],
-        specs: p.specs || {},
-        location: p.location || 'United States',
-        inclusions: p.inclusions || []
-      },
+      update: {}, // Non-destructive: preserves existing listings in production; only inserts missing items
       create: {
         id: p.id,
         name: p.name,
@@ -100,27 +66,7 @@ export const seedDatabase = async () => {
   for (const b of SEED_BOOKINGS) {
     await prisma.booking.upsert({
       where: { id: b.id },
-      update: {
-        productId: b.productId,
-        productName: b.productName,
-        productImage: b.productImage || null,
-        customerId: b.customerId,
-        customerName: b.customerName,
-        customerEmail: b.customerEmail,
-        vendorId: b.vendorId,
-        vendorName: b.vendorName,
-        startDate: b.startDate,
-        endDate: b.endDate,
-        totalDays: b.totalDays,
-        dailyRate: b.dailyRate,
-        baseCost: b.baseCost,
-        serviceFee: b.serviceFee,
-        securityDeposit: b.securityDeposit,
-        totalPrice: b.totalPrice,
-        status: b.status,
-        customerNotes: b.customerNotes || null,
-        destination: b.destination || null
-      },
+      update: {}, // Non-destructive: preserves existing bookings and lifecycle states
       create: {
         id: b.id,
         productId: b.productId,
