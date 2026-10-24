@@ -4,6 +4,7 @@ node_modules/
 # Production build artifacts
 dist/
 dist-ssr/
+.vercel/
 
 # Environment variables & secrets
 .env

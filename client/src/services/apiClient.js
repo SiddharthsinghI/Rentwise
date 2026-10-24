@@ -3,7 +3,8 @@
  * Connects to the Express backend when full backend mode is activated.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = rawApiUrl.replace(/\/+$/, '');
 const TOKEN_KEY = 'rentwise_auth_token';
 
 export const tokenStorage = {
